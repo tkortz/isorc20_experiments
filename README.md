@@ -215,6 +215,18 @@ By default, it will perform tracking of vehicles and pedestrians for a given sce
 
 ## 6. Compute tracking metrics
 
+### Metrics using ground-truth positions
+
+To generate the metrics, as displayed in Tables II and III of our paper for ground-truth "detections", use the `run_parse_metrics_groundtruth.sh` script:
+
+```
+./run_parse_metrics_groundtruth.sh
+```
+
+The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/${TARGET}_metrics.txt`, again where `$TARGET` is either "pedestrian" or "vehicle".
+
+### Metrics using detected positions
+
 ```
 TODO
 ```
