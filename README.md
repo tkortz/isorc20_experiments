@@ -27,9 +27,10 @@ In order to reproduce the results in our paper, the following steps are necessar
 
 We now walk through in each step in detail.  These instructions assume the related repositories are in:
 
+* ISORC '20 experiments: `$ISORC_DIR`
 * CARLA: `$CARLA_DIR`
 * CARLA scenario runner: `$CARLA_SCENARIO_RUNNER_DIR`
-* OpenCV with TBD sample: `OPENCV_DIR`
+* OpenCV with TBD sample: `$OPENCV_DIR`
 
 ## 1. Record scenarios
 
@@ -122,9 +123,9 @@ Note the mapping:
 * Scenario 3: 2762.rec
 * Scenario 4: 7856.rec
 
-If you did not record your own scenarios, make sure to copy our recordings to this directory.  They can be found in `$CARLA_DIR/PythonAPI/examples/recorded_scenarios/`.
+If you did not record your own scenarios, make sure to copy our recordings to this directory.  They can be found in `${CARLA_DIR}/PythonAPI/examples/recorded_scenarios/`.
 
-If instead you did record your own scenarios, be sure to update lines 134-141 of `$CARLA_DIR/PythonAPI/examples/manual_control_synchronous.py` accordingy.
+If instead you did record your own scenarios, be sure to update lines 134-141 of `${CARLA_DIR}/PythonAPI/examples/manual_control_synchronous.py` accordingy.
 
 ## 2. Replay each scenario to generate ground-truth data and images
 
@@ -142,26 +143,22 @@ cd $CARLA_DIR/PythonAPI/util
 python3 config.py -m $TOWN --w ClearNoon
 ```
 
-Then, create the folder `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/` for each scenario you plan to run (e.g., `scenario_1`).  Once the CARLA client has started, navigate to the PythonAPI-examples directory and run the following Python script to enable the synchronous replay:
+Then, create the folder `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/` for each scenario you plan to run (e.g., `scenario_1`).  Once the CARLA client has started, navigate to the PythonAPI-examples directory and run the following Python script to enable the synchronous replay:
 
 ```
 cd $CARLA_DIR/PythonAPI/examples
 python3 manual_control_synchronous.py
 ```
 
-This script will spawn a vehicle (which we'll ignore), and is ready by default to replay scenario 1.  To change scenarios, change line 132 of `manual_control_synchronous.py` to set `SCENARIO_NAME` accordingly.
+This script will spawn a vehicle (which we'll ignore), and is ready by default to replay scenario 1.  To change scenarios, change line 132 of `manual_control_synchronous.py` to set `$SCENARIO_NAME` accordingly.
 
 Once the vehicle spawns, press `ctrl+p` once to replay the scenario.  This causes the following to occur:
 
 * Enables the display of ground-truth bounding boxes for both vehicles and pedestrians.
-* Writes the corresponding ground-truth positions of vehicles and pedestrians to files in the directory `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/`.
-* Outputs one RGB, one depth, and one semantic segmentation image per frame from the camera on the front of the ego vehicle to per-image-type directories in `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/`.
+* Writes the corresponding ground-truth positions of vehicles and pedestrians to files in the directory `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/`.
+* Outputs one RGB, one depth, and one semantic segmentation image per frame from the camera on the front of the ego vehicle to per-image-type directories in `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/`.
 
 Note that this step is very slow, as it requires running the server synchronously and outputting a lot of data per frame.  If you're just testing the workflow, you can hit `escape` after a couple of frames to close the client.
-
-```
-TODO: mention what to do when it's done
-```
 
 ## 3. Post-process CARLA output
 
@@ -171,9 +168,9 @@ The images and ground-truth detections outputted by CARLA need to be post-proces
 
 The sensors (e.g., RGB camera) can begin saving images before the replay is entirely set up.  Fortunately, the ground-truth detection files include in the filename the starting frame number, e.g., `vehicle_bboxes_96243.txt`.  Verify that the two detection files have the same starting frame, and then delete any images with a lower frame number from the following three directories:
 
-* `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/rgb`
-* `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/depth`
-* `$CARLA_DIR/PythonAPI/examples/isorc20/{SCENARIO_NAME}/semseg`
+* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/rgb`
+* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/depth`
+* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/semseg`
 
 Note that it is possible that the first frame (or few frames) occurred as the ego vehicle was still being placed, so you might need to delete an extra image from each directory, remove the corresponding line(s) from the ground-truth data files (the frame number is the first value in each row), and update the ground-truth data file names.
 
@@ -188,11 +185,11 @@ cd $CARLA_DIR/PythonAPI/examples
 python3 remove_invisible_targets.py
 ```
 
-This step will result in one new ground-truth detection file per target type, with a filename like `vehicle_bboxes_96243_vis.txt`.  Note that the processing can take a few minutes, and does not generate output.
+This step will result in one new ground-truth detection file per target type, with a filename like `vehicle_bboxes_scenario_1_vis.txt`.  Note that the processing can take a few minutes, and does not generate output.
 
 ## 4. (Optional) Detect vehicles/pedestrians in images
 
-The RGB images in `isorc20/{SCENARIO_NAME}/rgb/` can be used to perform vehicle or pedestrian detection.
+The RGB images in `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/rgb/` can be used to perform vehicle or pedestrian detection.
 
 ```
 TODO
