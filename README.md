@@ -197,9 +197,19 @@ TODO
 
 ## 5. Use TBD to track vehicles/pedestrians
 
+We added a sample to OpenCV to perform tracking-by-detection.
+
+First, follow the instructions in our [OpenCV fork](https://github.com/tkortz/opencv) to build our TBD sample.
+
+Then, once the same is built, you can use the script `run_tbd_groundtruth.sh` in this repository to perform tracking.  This script takes the $SCENARIO_NAME from the earlier steps as its only input parameter.
+
+For example:
+
 ```
-TODO
+./run_tbd_groundtruth.sh scenario_1
 ```
+
+By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 28 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step.
 
 ## 6. Compute tracking metrics
 
