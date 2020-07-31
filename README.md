@@ -178,10 +178,10 @@ Note that it is possible that the first frame (or few frames) occurred as the eg
 
 For the ground-truth detections, this means filtering out any that aren't visible to the camera on the ego vehicle.  This is done using the semantic segmentation information (it isn't perfect, but it's a close proxy).  Given a rectangle in 2D image space (the ground-truth detection result), the semantic label of each pixel in the rectangle is checked; if none matches the target type (pedestrian or vehicle), the detection is filtered out.
 
-For each scenario and each target type, update lines 7, 8, and 12 of `remove_invisible_targets.py` and run it.  You'll need the starting frame number from the previous step.
+For each scenario and each target type, update lines 7, 8, and 12 of `remove_invisible_targets.py` in the ISORC '20 experiments repo and run it.  You'll need the starting frame number from the previous step.
 
 ```
-cd $CARLA_DIR/PythonAPI/examples
+cd $ISORC_DIR
 python3 remove_invisible_targets.py
 ```
 
