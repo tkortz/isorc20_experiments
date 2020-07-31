@@ -201,7 +201,9 @@ We added a sample to OpenCV to perform tracking-by-detection.
 
 First, follow the instructions in our [OpenCV fork](https://github.com/tkortz/opencv) to build our TBD sample.
 
-Then, once the same is built, you can use the script `run_tbd_groundtruth.sh` in this repository to perform tracking.  This script takes the $SCENARIO_NAME from the earlier steps as its only input parameter.
+Then, once the same is built, you can configure the script `run_tbd_groundtruth.sh` in this repository to perform tracking.  You will need to update lines 11, 12, and 15 based on `$CARLA_DIR`, `$ISORC_DIR`, and `$OPENCV_DIR`.
+
+Finally, run the script.  It takes the `$SCENARIO_NAME` from the earlier steps as its only input parameter.
 
 For example:
 
