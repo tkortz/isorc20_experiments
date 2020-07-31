@@ -58,20 +58,20 @@ cd $CARLA_DIR
 
 ### c) Run the scenario
 
-The following table lists the scenarios we evaluated in our paper, as well as the towns they appear in and the name of the scenario in the `carla-scenario-runner` repository (`$SCENARIO_NAME` below):
+The following table lists the scenarios we evaluated in our paper, as well as the towns they appear in and the name of the scenario in the `carla-scenario-runner` repository (`$CARLA_SCENARIO_NAME` below):
 
 | Our Name   	| Town   	| Name in carla-scenario-runner     	|
 |------------	|--------	|-----------------------------------	|
-| Scenario 1 	| Town 1 	| VehicleTurningRight_1             	|
-| Scenario 2 	| Town 3 	| SignalizedJunctionRightTurn_1     	|
-| Scenario 3 	| Town 3 	| OppositeVehicleRunningRedLight032 	|
-| Scenario 4 	| Town 4 	| SignalizedJunctionLeftTurn_3      	|
+| Scenario 1 	| `Town01` 	| VehicleTurningRight_1             	|
+| Scenario 2 	| `Town03` 	| SignalizedJunctionRightTurn_1     	|
+| Scenario 3 	| `Town03` 	| OppositeVehicleRunningRedLight032 	|
+| Scenario 4 	| `Town04` 	| SignalizedJunctionLeftTurn_3      	|
 
 To run a scenario, open a second terminal window and navigate to the root directory of this repo and run `scenario_runner.py`:
 
 ```
 cd $CARLA_SCENARIO_RUNNER_DIR
-python3 scenario_runner.py --scenario $SCENARIO_NAME
+python3 scenario_runner.py --scenario $CARLA_SCENARIO_NAME
 ```
 
 ### d) Add pedestrians
@@ -150,7 +150,7 @@ cd $CARLA_DIR/PythonAPI/examples
 python3 manual_control_synchronous.py
 ```
 
-This script will spawn a vehicle (which we'll ignore), and is ready by default to replay scenario 1.  To change scenarios, change line 132 of `manual_control_synchronous.py` to set `$SCENARIO_NAME` accordingly.
+This script will spawn a vehicle (which we'll ignore), and is ready by default to replay Scenario 1.  To change scenarios, change line 132 of `manual_control_synchronous.py` to set `$SCENARIO_NAME` accordingly.
 
 Once the vehicle spawns, press `ctrl+p` once to replay the scenario.  This causes the following to occur:
 
@@ -166,7 +166,7 @@ The images and ground-truth detections outputted by CARLA need to be post-proces
 
 ### a) Remove images from before the replay started
 
-The sensors (e.g., RGB camera) can begin saving images before the replay is entirely set up.  Fortunately, the ground-truth detection files include in the filename the starting frame number, e.g., `vehicle_bboxes_96243.txt`.  Verify that the two detection files have the same starting frame, and then delete any images with a lower frame number from the following three directories:
+The sensors (e.g., RGB camera) can begin saving images before the replay is entirely set up.  For this reason, the ground-truth detection files include in the filename the starting frame number, e.g., `vehicle_bboxes_96243.txt`.  Verify that the two detection files have the same starting frame, and then delete any images with a lower frame number from the following three directories:
 
 * `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/rgb`
 * `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/depth`
