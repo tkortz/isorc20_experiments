@@ -186,14 +186,16 @@ Note that it is possible that the first frame (or few frames) occurred as the eg
 
 For the ground-truth detections, this means filtering out any that aren't visible to the camera on the ego vehicle.  This is done using the semantic segmentation information (it isn't perfect, but it's a close proxy).  Given a rectangle in 2D image space (the ground-truth detection result), the semantic label of each pixel in the rectangle is checked; if none matches the target type (pedestrian or vehicle), the detection is filtered out.
 
-For each scenario and each target type, update lines 6, 7, and 11 of `remove_invisible_targets.py` in the ISORC '20 experiments repo and run it.  You'll need the starting frame number from the previous step.
+The script `run_remove_invisible_targets.sh` will do this processing for you.  It assumes the locations of the semantic segmentation images and the ground-truth data files within `$ISORC_DIR`.
+
+For each scenario, you will need to update line 4 of `run_remove_invisible_targets.sh` to provide the starting frame number from the previous step.  Then, run the script from the ISORC '20 experiments repo.
 
 ```
 cd $ISORC_DIR
-python3 remove_invisible_targets.py
+./run_remove_invisible_targets.sh
 ```
 
-This step will result in one new ground-truth detection file per target type, with a filename like `vehicle_bboxes_scenario_1_vis.txt`.  Note that the processing can take a few minutes, and does not generate output.
+This step will result in one new ground-truth detection file per target type and scenario, with a filename like `vehicle_bboxes_scenario_1_vis.txt`.  Note that the processing can take a few minutes per file.
 
 ## 4. (Optional) Detect vehicles/pedestrians in images
 

@@ -1,19 +1,6 @@
 import os
 import matplotlib.pyplot as plt
-
-# Set the scenario to e.g., "scenario_1" and the target_type to "vehicle"
-# or "pedestrian"
-scenario = "scenario_1"
-target_type = "pedestrian"
-
-# Check the starting frame number (used to delete any earlier images),
-# and use that here
-starting_frame = 96243
-
-results_dir = "/home/tamert/isorc20/carla_results"
-semseg_folder = results_dir + "/{0}/semseg".format(scenario)
-bbox_filepath = results_dir + "/{0}/{1}_bboxes_{2}.txt".format(scenario, target_type, starting_frame)
-bbox_outfilepath = results_dir + "/{0}/{1}_bboxes_{2}_vis.txt".format(scenario, target_type, scenario)
+import sys
 
 redValForTargetType = {"pedestrian":  4,
                        "vehicle":    10}
@@ -65,4 +52,16 @@ def parseFile(inFilepath, semsegFolder, targetType, outFilepath):
     fout.close()
 
 if __name__ == "__main__":
-    parseFile(bbox_filepath, semseg_folder, target_type, bbox_outfilepath)
+    if len(sys.argv) < 4:
+        print("Must provide scenario, tracking target type, and starting frame, e.g.:\n",
+              "\tpython3 remove_invisible_targets.py scenario_2 vehicle 9624")
+        raise Exception()
+
+    scenario, target_type, starting_frame = sys.argv[1], sys.argv[2], sys.argv[3]
+    isorc20_dir = os.getcwd()
+
+    semseg_folder = isorc20_dir + "/carla_results/{0}/semseg".format(scenario)
+    bbox_infilepath = isorc20_dir + "/carla_results/{0}/{1}_bboxes_{2}.txt".format(scenario, target_type, starting_frame)
+    bbox_outfilepath = isorc20_dir + "/carla_results/{0}/{1}_bboxes_{2}_vis.txt".format(scenario, target_type, scenario)
+
+    parseFile(bbox_infilepath, semseg_folder, target_type, bbox_outfilepath)
