@@ -1,3 +1,4 @@
 carla_results/*
-metrics_results/*
+detector_results/*
 tracking_results/*
+metrics_results/*

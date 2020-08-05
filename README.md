@@ -228,18 +228,30 @@ We added a sample to OpenCV to perform tracking-by-detection.
 
 First, follow the instructions in our [OpenCV fork](https://github.com/tkortz/opencv) to build our TBD sample.
 
-Then, once the TBD sample is built, you can configure the script `run_tbd_groundtruth.sh` in `$ISORC_DIR` to perform tracking.  You will need to update lines 11 and 14 based on `$ISORC_DIR` and `$OPENCV_DIR`.
+Then, once the TBD sample is built, you can configure the scripts `run_tbd_groundtruth.sh` and `run_tbd_detector.sh` in `$ISORC_DIR` to perform tracking.  You will need to update lines 11 and 14 of both scripts based on `$ISORC_DIR` and `$OPENCV_DIR`.
 
-Finally, run the script.  It takes the `$SCENARIO_NAME` from the earlier steps as its only input parameter.
+Finally, run the scripts.  They take the `$SCENARIO_NAME` from the earlier steps as the only input parameter.
 
-For example:
+For example, to track based on ground-truth vehicle/pedestrian positions:
 
 ```
 cd $ISORC_DIR
 ./run_tbd_groundtruth.sh scenario_1
 ```
 
-By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step, next.
+To instead track based on detected vehicle positions (note that this will not track pedestrians):
+
+```
+cd $ISORC_DIR
+./run_tbd_detector.sh scenario_1
+```
+
+By default, these scripts will perform tracking of vehicles (and pedestrians, if using ground-truth data) for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and line 25 of `run_tbd_detector.sh`.  The file names have the following format:
+
+* `${TARGET}_tracking_${SCENARIO_NAME}_vis.txt` if using ground-truth data (where `$TARGET` is one of "pedestrian" or "vehicle")
+* `vehicle_tracking_${SCENARIO_NAME}_detector.txt` if using detected positions (no pedestrian detection is currently performed)
+
+These log files will be processed in the last step, next.
 
 ## 6. Compute tracking metrics
 
