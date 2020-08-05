@@ -12,7 +12,7 @@ for i in "${!scenarios[@]}"; do
     for j in "${!targets[@]}"; do
         target=${targets[$j]}
 
-        # Run parse_metrics.py for each scenario-target combination
+        # Run parse_metrics_groundtruth.py for each scenario-target combination
         python3 parse_metrics_groundtruth.py $scenario $target
     done
 done

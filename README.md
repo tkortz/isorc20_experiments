@@ -164,21 +164,29 @@ Note that this step is very slow, as it requires running the server synchronousl
 
 The images and ground-truth detections outputted by CARLA need to be post-processed.
 
-### a) Remove images from before the replay started
+### a) Copy the CARLA output to the ISORC experiments directory
+
+The output from CARLA should first be copied to your ISORC experiments directory:
+
+```
+cp -r ${CARLA_DIR}/PythonAPI/examples/isorc20/ ${ISORC_DIR}/carla_results/
+```
+
+### b) Remove images from before the replay started
 
 The sensors (e.g., RGB camera) can begin saving images before the replay is entirely set up.  For this reason, the ground-truth detection files include in the filename the starting frame number, e.g., `vehicle_bboxes_96243.txt`.  Verify that the two detection files have the same starting frame, and then delete any images with a lower frame number from the following three directories:
 
-* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/rgb`
-* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/depth`
-* `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/semseg`
+* `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb`
+* `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/depth`
+* `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/semseg`
 
 Note that it is possible that the first frame (or few frames) occurred as the ego vehicle was still being placed, so you might need to delete an extra image from each directory, remove the corresponding line(s) from the ground-truth data files (the frame number is the first value in each row), and update the ground-truth data file names.
 
-### b) Filter out fully occluded pedestrians and vehicles
+### c) Filter out fully occluded pedestrians and vehicles
 
 For the ground-truth detections, this means filtering out any that aren't visible to the camera on the ego vehicle.  This is done using the semantic segmentation information (it isn't perfect, but it's a close proxy).  Given a rectangle in 2D image space (the ground-truth detection result), the semantic label of each pixel in the rectangle is checked; if none matches the target type (pedestrian or vehicle), the detection is filtered out.
 
-For each scenario and each target type, update lines 7, 8, and 12 of `remove_invisible_targets.py` in the ISORC '20 experiments repo and run it.  You'll need the starting frame number from the previous step.
+For each scenario and each target type, update lines 6, 7, and 11 of `remove_invisible_targets.py` in the ISORC '20 experiments repo and run it.  You'll need the starting frame number from the previous step.
 
 ```
 cd $ISORC_DIR
@@ -201,17 +209,18 @@ We added a sample to OpenCV to perform tracking-by-detection.
 
 First, follow the instructions in our [OpenCV fork](https://github.com/tkortz/opencv) to build our TBD sample.
 
-Then, once the same is built, you can configure the script `run_tbd_groundtruth.sh` in this repository to perform tracking.  You will need to update lines 11, 12, and 15 based on `$CARLA_DIR`, `$ISORC_DIR`, and `$OPENCV_DIR`.
+Then, once the TBD sample is built, you can configure the script `run_tbd_groundtruth.sh` in `$ISORC_DIR` to perform tracking.  You will need to update lines 11, 12, and 15 based on `$ISORC_DIR` and `$OPENCV_DIR`.
 
 Finally, run the script.  It takes the `$SCENARIO_NAME` from the earlier steps as its only input parameter.
 
 For example:
 
 ```
+cd $ISORC_DIR
 ./run_tbd_groundtruth.sh scenario_1
 ```
 
-By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 28 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step.
+By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 28 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step, next.
 
 ## 6. Compute tracking metrics
 
@@ -220,6 +229,7 @@ By default, it will perform tracking of vehicles and pedestrians for a given sce
 To generate the metrics, as displayed in Tables II and III of our paper for ground-truth "detections", use the `run_parse_metrics_groundtruth.sh` script:
 
 ```
+cd $ISORC_DIR
 ./run_parse_metrics_groundtruth.sh
 ```
 

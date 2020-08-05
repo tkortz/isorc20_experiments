@@ -8,7 +8,7 @@ scenario=$1
 num_iters=100
 
 # TODO: Update directories for input and output
-root_dir="/home/tamert/carla/PythonAPI/examples/isorc20"
+root_dir="/home/tamert/isorc20/carla_results"
 output_root_dir="/home/tamert/isorc20/tracking_results"
 
 # TODO: Update path to the TBD executable

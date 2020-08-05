@@ -1,6 +1,5 @@
+import os
 import matplotlib.pyplot as plt
-import numpy as np
-from scipy import misc
 
 # Set the scenario to e.g., "scenario_1" and the target_type to "vehicle"
 # or "pedestrian"
@@ -11,7 +10,7 @@ target_type = "pedestrian"
 # and use that here
 starting_frame = 96243
 
-results_dir = "/home/tamert/carla/PythonAPI/examples/isorc20"
+results_dir = "/home/tamert/isorc20/carla_results"
 semseg_folder = results_dir + "/{0}/semseg".format(scenario)
 bbox_filepath = results_dir + "/{0}/{1}_bboxes_{2}.txt".format(scenario, target_type, starting_frame)
 bbox_outfilepath = results_dir + "/{0}/{1}_bboxes_{2}_vis.txt".format(scenario, target_type, scenario)
