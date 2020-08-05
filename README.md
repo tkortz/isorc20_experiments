@@ -7,6 +7,7 @@ Other relevant repositories:
 
 * [CARLA fork](https://github.com/tkortz/carla)
 * [CARLA scenario runner fork](https://github.com/Yougmark/scenario_runner/tree/isorc20)
+* [Vehicle detector for CARLA images](https://github.com/s-nandi/carla-car-detection)
 * [Tracking-by-Detection OpenCV Sample](https://github.com/tkortz/opencv)
 
 Some relevant dependencies (see [CARLA build instructions](https://carla.readthedocs.io/en/latest/build_linux/) for more):
@@ -16,6 +17,8 @@ Some relevant dependencies (see [CARLA build instructions](https://carla.readthe
 * Python 3.5
 * A semi-powerful NVIDIA GPU
 * A lot of disk space (30-50GB recommended)
+
+Note that the [vehicle detector repository](https://github.com/s-nandi/carla-car-detection) has additional dependencies, which include Python 3.6 and CUDA 10.0.  See that repository for more information.
 
 In order to reproduce the results in our paper, the following steps are necessary:
 1. Record the scenarios, or use our `.rec` files.
@@ -30,6 +33,7 @@ We now walk through in each step in detail.  These instructions assume the relat
 * ISORC '20 experiments: `$ISORC_DIR`
 * CARLA: `$CARLA_DIR`
 * CARLA scenario runner: `$CARLA_SCENARIO_RUNNER_DIR`
+* Vehicle detector: `$DETECTOR_DIR`
 * OpenCV with TBD sample: `$OPENCV_DIR`
 
 ## 1. Record scenarios
@@ -199,10 +203,23 @@ This step will result in one new ground-truth detection file per target type and
 
 ## 4. (Optional) Detect vehicles/pedestrians in images
 
-The RGB images in `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/rgb/` can be used to perform vehicle or pedestrian detection.
+The RGB images in `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb/` can be used to perform vehicle detection.  Here is our description from the paper:
+
+_We chose for a detector a state-of-the-art deep-learning model, Faster R-CNN [39], which has been shown to achieve a high level of accuracy.  We used TensorFlow [1] to train a Faster R-CNN model with the Inception v2 feature extractor [24] (that was pre-trained on the COCO dataset [22], [30]) on a small dataset of 2000 images of bicycles, motorbikes, and cars generated from CARLA [8]._
+
+Our trained detector is available in our [Vehicle detector for CARLA images](https://github.com/s-nandi/carla-car-detection) repository.  Make sure to set up [Git Large File Storage](https://git-lfs.github.com/) before cloning the repository.
+
+After cloning, navigate to `$DETECTOR_DIR`, and run `image_detection.py` to perform vehicle detection on a directory of RGB images.  Note that we used the 40k-iteration detector (`detectors-40264`) and a minimum threshold of `0.70` for our evaluation.
 
 ```
-TODO
+cd $DETECTOR_DIR
+python3 image_detection.py --model_path=full_trained_model/detectors-40264 --images_path=${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb --min_threshold=0.70 --output_path=${ISORC_DIR}/detector_results/${SCENARIO_NAME}
+```
+
+This program will output the detections to the file `${ISORC_DIR}/detector_results/${SCENARIO_NAME}/rgb_log.txt`.  You should update its name before moving on:
+
+```
+mv ${ISORC_DIR}/detector_results/${SCENARIO_NAME}/rgb_log.txt ${ISORC_DIR}/detector_results/${SCENARIO_NAME}/vehicle_bboxes_${SCENARIO_NAME}_detector.txt
 ```
 
 ## 5. Use TBD to track vehicles/pedestrians
