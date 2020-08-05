@@ -6,9 +6,10 @@ outputfolder = "metrics_results"
 
 def parseArguments(isorc20_dir, scenario, target):
     infolder = isorc20_dir + "/" + inputfolder + "/" + scenario
-    filename = target + "_tracking_" + scenario + "_vis.txt"
-    outfilename = isorc20_dir + "/" + outputfolder + "/" + scenario + "/" + target + "_metrics_groundtruth.txt"
-    return infolder, filename, outfilename
+    filename = target + "_tracking_" + scenario + "_detector.txt"
+    outfilename = isorc20_dir + "/" + outputfolder + "/" + scenario + "/" + target + "_metrics_detector.txt"
+    gtfilename = target + "_tracking_" + scenario + "_vis.txt"
+    return infolder, filename, outfilename, gtfilename
 
 # History distribution names from log files
 dists = ["p5p4p1", "p80p2p2p16", "p8p2", "p900p90p9p1", "p1", "p2", "p3", "p4"]
@@ -75,36 +76,44 @@ def parseMetricsFromFile(filepath):
 
     f.close()
 
-    # Get the average metrics across all iterations
-    avgMetrics = {}
-    for metric in ["A-MOTA", "MOTP"]:
-        avgMetrics[metric] = sum([r[metric] for r in repeats]) / len(repeats)
-
-    # Also get average FM
-    avgMetrics["Avg.FM"] = sum([sum(r["FM"]) / len(r["FM"]) for r in repeats]) / len(repeats)        
-
-    return avgMetrics
+    return repeats
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Must provide scenario and tracking target type, e.g.:\n",
-              "\tpython3 parse_metrics_groundtruth.py scenario_2 vehicle")
+              "\tpython3 parse_metrics_detector.py scenario_2 vehicle")
         raise Exception()
 
     scenario, target = sys.argv[1], sys.argv[2]
     isorc20_dir = os.getcwd()
-    infolder, filename, outfilepath = parseArguments(isorc20_dir, scenario, target)
+    infolder, filename, outfilename, gtfilename = parseArguments(isorc20_dir, scenario, target)
 
     metricDictByHistory = {}
+    gtDictByHistory = {}
 
-    outfile = open(outfilepath, 'w')
+    outfile = open(outfilename, 'w')
 
     for dist in dists:
         filepath = infolder + "/" + dist + "/" + filename
+        gtfilepath = infolder + "/" + dist + "/" + gtfilename
 
-        metrics = parseMetricsFromFile(filepath)
-        
-        outfile.write("{0:12s}: A-MOTA: {1}, MOTP: {2}, Avg.FM: {3}\n".format( \
-                      dist, metrics["A-MOTA"], metrics["MOTP"], metrics["Avg.FM"]))
+        repeats = parseMetricsFromFile(filepath)
+
+        gtrepeats = parseMetricsFromFile(gtfilepath)
+        gtmetrics = gtrepeats[0]
+
+        amotaVals = []
+        for metrics in repeats:
+            amotanum = sum(metrics["FP"]) + sum(metrics["FN"])
+            amotadenom = sum(gtmetrics["GT"])
+            amota = 1 - (amotanum / amotadenom)
+            amotaVals.append(amota)
+
+        avgAmota = sum(amotaVals) / len(amotaVals)
+        print(amotaVals)
+        avgMtop = sum([r["MOTP"] for r in repeats]) / len(repeats)
+
+        outfile.write("{0:12s}: A-MOTA: {1}, MOTP: {2}\n".format( \
+                      dist, amota, metrics["MOTP"]))
 
     outfile.close()

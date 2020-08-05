@@ -255,19 +255,24 @@ These log files will be processed in the last step, next.
 
 ## 6. Compute tracking metrics
 
-### Metrics using ground-truth positions
+### a) Metrics using ground-truth positions
 
-To generate the metrics, as displayed in Tables II and III of our paper for ground-truth "detections", use the `run_parse_metrics_groundtruth.sh` script:
+To generate the metrics, as displayed in Tables II and III of our paper for ground-truth positions, use the `run_parse_metrics_groundtruth.sh` script:
 
 ```
 cd $ISORC_DIR
 ./run_parse_metrics_groundtruth.sh
 ```
 
-The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/${TARGET}_metrics.txt`, again where `$TARGET` is either "pedestrian" or "vehicle".
+The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/${TARGET}_metrics_groundtruth.txt`, again where `$TARGET` is either "pedestrian" or "vehicle".
 
-### Metrics using detected positions
+### b) Metrics using detected positions
+
+The results from Table IV for deep-learning-based vehicle detections can be computed using the `run_parse_metrics_detector.sh` script:
 
 ```
-TODO
+cd $ISORC_DIR
+./run_parse_metrics_detector.sh
 ```
+
+The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/vehicle_metrics_detector.txt`.
