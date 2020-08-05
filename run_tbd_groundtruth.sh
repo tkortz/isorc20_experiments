@@ -7,17 +7,16 @@ scenario=$1
 # TODO: Set the number of iterations of a given history PMF
 num_iters=100
 
-# TODO: Update directories for input and output
-root_dir="/home/tamert/isorc20/carla_results"
-output_root_dir="/home/tamert/isorc20/tracking_results"
+# TODO: Update root directory for input and output
+root_dir="/home/tamert/isorc20"
 
 # TODO: Update path to the TBD executable
 exe="/home/tamert/opencv/build/bin/example_gpu_tbd"
 
 # Paths to input files
-pedestrian_bbox="${root_dir}/$scenario/pedestrian_bboxes_${scenario}_vis.txt"
-vehicle_bbox="${root_dir}/$scenario/vehicle_bboxes_${scenario}_vis.txt"
-rgb_dir="${root_dir}/$scenario/rgb/"
+rgb_dir="${root_dir}/carla_results/$scenario/rgb/"
+pedestrian_bbox="${root_dir}/carla_results/$scenario/pedestrian_bboxes_${scenario}_vis.txt"
+vehicle_bbox="${root_dir}/carla_results/$scenario/vehicle_bboxes_${scenario}_vis.txt"
 
 # Tracking output log file names
 pedestrian_out="pedestrian_tracking_${scenario}_vis.txt"
@@ -32,7 +31,7 @@ for i in "${!distArray[@]}"; do
     diststr=${distStrArray[$i]}
     echo $dist $diststr
 
-    outdir="${output_root_dir}/${scenario}/${diststr}"
+    outdir="${root_dir}/tracking_results/${scenario}/${diststr}"
     mkdir -p $outdir
 
     # Run tracking-by-detection

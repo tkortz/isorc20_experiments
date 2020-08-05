@@ -211,7 +211,7 @@ We added a sample to OpenCV to perform tracking-by-detection.
 
 First, follow the instructions in our [OpenCV fork](https://github.com/tkortz/opencv) to build our TBD sample.
 
-Then, once the TBD sample is built, you can configure the script `run_tbd_groundtruth.sh` in `$ISORC_DIR` to perform tracking.  You will need to update lines 11, 12, and 15 based on `$ISORC_DIR` and `$OPENCV_DIR`.
+Then, once the TBD sample is built, you can configure the script `run_tbd_groundtruth.sh` in `$ISORC_DIR` to perform tracking.  You will need to update lines 11 and 14 based on `$ISORC_DIR` and `$OPENCV_DIR`.
 
 Finally, run the script.  It takes the `$SCENARIO_NAME` from the earlier steps as its only input parameter.
 
@@ -222,7 +222,7 @@ cd $ISORC_DIR
 ./run_tbd_groundtruth.sh scenario_1
 ```
 
-By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 28 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step, next.
+By default, it will perform tracking of vehicles and pedestrians for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/${TARGET}_tracking_${SCENARIO_NAME}_vis.txt`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and `$TARGET` is one of "pedestrian" or "vehicle".  These log files will be processed in the last step, next.
 
 ## 6. Compute tracking metrics
 
