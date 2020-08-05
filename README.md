@@ -246,7 +246,7 @@ cd $ISORC_DIR
 ./run_tbd_detector.sh scenario_1
 ```
 
-By default, these scripts will perform tracking of vehicles (and pedestrians, if using ground-truth data) for a given scenario 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and line 25 of `run_tbd_detector.sh`.  The file names have the following format:
+By default, these scripts will perform tracking of vehicles (and pedestrians, if using ground-truth data) for a given scenario once for each single-valued PMF in our paper, and 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and line 25 of `run_tbd_detector.sh`.  The file names have the following format:
 
 * `${TARGET}_tracking_${SCENARIO_NAME}_vis.txt` if using ground-truth data (where `$TARGET` is one of "pedestrian" or "vehicle")
 * `vehicle_tracking_${SCENARIO_NAME}_detector.txt` if using detected positions (no pedestrian detection is currently performed)

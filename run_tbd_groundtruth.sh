@@ -34,6 +34,15 @@ for i in "${!distArray[@]}"; do
     outdir="${root_dir}/tracking_results/${scenario}/${diststr}"
     mkdir -p $outdir
 
+    # Only do the repetitions for PMFs with more than one possible value
+    num_vals_in_PMF=`echo "${diststr}" | tr -cd 'p' | wc -c`
+    if [ $num_vals_in_PMF -eq 1 ];
+    then
+        iters=1
+    else
+        iters=$num_iters
+    fi
+
     # Run tracking-by-detection
     $exe --folder $rgb_dir \
          --history_distribution $dist \
@@ -43,6 +52,6 @@ for i in "${!distArray[@]}"; do
          --pedestrian_tracking_filepath "$outdir/${pedestrian_out}" \
          --vehicle_tracking_filepath "$outdir/${vehicle_out}" \
          --write_video false \
-         --num_tracking_iters $num_iters \
+         --num_tracking_iters $iters \
          --num_tracking_frames 300
 done
