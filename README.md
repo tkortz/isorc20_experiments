@@ -1,9 +1,7 @@
 Project Information
 ===============
 
-This repository was used for the paper ["The Price of Schedulability in Multi-ObjectTracking: The History-vs.-Accuracy Trade-Off"](https://www.cs.unc.edu/~anderson/papers/isorc20.pdf), presented at ISORC 2020.
-
-Since then, it has been extended as part of a journal paper.
+This repository was used for an extended version of the paper ["The Price of Schedulability in Multi-ObjectTracking: The History-vs.-Accuracy Trade-Off"](https://www.cs.unc.edu/~anderson/papers/isorc20.pdf), originally presented at ISORC 2020.
 
 Other relevant repositories:
 
