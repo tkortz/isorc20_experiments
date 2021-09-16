@@ -3,6 +3,8 @@ Project Information
 
 This repository was used for the paper ["The Price of Schedulability in Multi-ObjectTracking: The History-vs.-Accuracy Trade-Off"](https://www.cs.unc.edu/~anderson/papers/isorc20.pdf), presented at ISORC 2020.
 
+Since then, it has been extended as part of a journal paper.
+
 Other relevant repositories:
 
 * [CARLA fork](https://github.com/tkortz/carla)
@@ -147,7 +149,7 @@ cd $CARLA_DIR/PythonAPI/util
 python3 config.py -m $TOWN --w ClearNoon
 ```
 
-Then, create the folder `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/` for each scenario you plan to run (e.g., `scenario_1`).  Once the CARLA client has started, navigate to the PythonAPI-examples directory and run the following Python script to enable the synchronous replay:
+Then, create the folder `${CARLA_DIR}/PythonAPI/examples/isorc20_journal/${SCENARIO_NAME}/` for each scenario you plan to run (e.g., `scenario_1`).  Once the CARLA client has started, navigate to the PythonAPI-examples directory and run the following Python script to enable the synchronous replay:
 
 ```
 cd $CARLA_DIR/PythonAPI/examples
@@ -159,8 +161,8 @@ This script will spawn a vehicle (which we'll ignore), and is ready by default t
 Once the vehicle spawns, press `ctrl+p` once to replay the scenario.  This causes the following to occur:
 
 * Enables the display of ground-truth bounding boxes for both vehicles and pedestrians.
-* Writes the corresponding ground-truth positions of vehicles and pedestrians to files in the directory `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/`.
-* Outputs one RGB, one depth, and one semantic segmentation image per frame from the camera on the front of the ego vehicle to per-image-type directories in `${CARLA_DIR}/PythonAPI/examples/isorc20/${SCENARIO_NAME}/`.
+* Writes the corresponding ground-truth positions of vehicles and pedestrians to files in the directory `${CARLA_DIR}/PythonAPI/examples/isorc20_journal/${SCENARIO_NAME}/`.
+* Outputs one RGB, one depth, and one semantic segmentation image per frame from the camera on the front of the ego vehicle to per-image-type directories in `${CARLA_DIR}/PythonAPI/examples/isorc20_journal/${SCENARIO_NAME}/`.
 
 Note that this step is very slow, as it requires running the server synchronously and outputting a lot of data per frame.  If you're just testing the workflow, you can hit `escape` after a couple of frames to close the client.
 
@@ -173,7 +175,7 @@ The images and ground-truth detections outputted by CARLA need to be post-proces
 The output from CARLA should first be copied to your ISORC experiments directory:
 
 ```
-cp -r ${CARLA_DIR}/PythonAPI/examples/isorc20/ ${ISORC_DIR}/carla_results/
+cp -r ${CARLA_DIR}/PythonAPI/examples/isorc20_journal/ ${ISORC_DIR}/carla_results/
 ```
 
 ### b) Remove images from before the replay started

@@ -8,7 +8,7 @@ scenario=$1
 num_iters=100
 
 # TODO: Update root directory for input and output
-root_dir="/home/tamert/isorc20"
+root_dir="/home/tamert/isorc20_journal"
 
 # TODO: Update path to the TBD executable
 exe="/home/tamert/opencv/build/bin/example_gpu_tbd"
