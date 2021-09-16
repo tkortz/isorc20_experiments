@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run everything
-declare -a scenarios=("scenario_1" "scenario_2" "scenario_3" "scenario_4")
+declare -a scenarios=("scenario_1" "scenario_2" "scenario_3" "scenario_4" "scenario_5")
 declare -a targets=("pedestrian" "vehicle")
 
 for i in "${!scenarios[@]}"; do

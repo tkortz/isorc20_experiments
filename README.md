@@ -8,7 +8,7 @@ Since then, it has been extended as part of a journal paper.
 Other relevant repositories:
 
 * [CARLA fork](https://github.com/tkortz/carla)
-* [CARLA scenario runner fork](https://github.com/Yougmark/scenario_runner/tree/isorc20)
+* [CARLA scenario runner fork](https://github.com/tkortz/carla_scenario_runner)
 * [Vehicle detector for CARLA images](https://github.com/s-nandi/carla-car-detection)
 * [Tracking-by-Detection OpenCV Sample](https://github.com/tkortz/opencv)
 
@@ -46,12 +46,12 @@ If you want to use our recorded scenario files, skip to [Step (g) Locating the r
 
 First, follow the steps to [build CARLA for Linux](https://carla.readthedocs.io/en/latest/build_linux/).
 
-Then, clone our fork of the [CARLA scenario runner repository](https://github.com/Yougmark/scenario_runner/tree/isorc20) and check out the `isorc20` branch.
+Then, clone our fork of the [CARLA scenario runner repository](https://github.com/tkortz/carla_scenario_runner) and check out the `acc-vs-hist-journal` branch.
 
 Finally, you'll need to do some setup:
 
-* [Installing prerequisites](https://github.com/Yougmark/scenario_runner/blob/isorc20/Docs/getting_started.md#installing-prerequisites)
-* [Pointing to your CARLA install and running an example scenario](https://github.com/Yougmark/scenario_runner/blob/isorc20/Docs/getting_started.md#running-the-follow-vehicle-example)
+* [Installing prerequisites](https://github.com/tkortz/carla_scenario_runner/blob/master/Docs/getting_started.md#installing-prerequisites)
+* [Pointing to your CARLA install and running an example scenario](https://github.com/tkortz/carla_scenario_runner/blob/master/Docs/getting_started.md#running-the-follow-vehicle-example)
 
 ### b) Run the server
 
@@ -72,6 +72,7 @@ The following table lists the scenarios we evaluated in our paper, as well as th
 | Scenario 2 	| `Town03` 	| SignalizedJunctionRightTurn_1     	|
 | Scenario 3 	| `Town03` 	| OppositeVehicleRunningRedLight032 	|
 | Scenario 4 	| `Town04` 	| SignalizedJunctionLeftTurn_3      	|
+| Scenario 5 	| `Town05` 	| OtherLeadingVehicle_8             	|
 
 To run a scenario, open a second terminal window and navigate to the root directory of this repo and run `scenario_runner.py`:
 
@@ -82,7 +83,7 @@ python3 scenario_runner.py --scenario $CARLA_SCENARIO_NAME
 
 ### d) Add pedestrians
 
-From a third terminal window, navigate to the CARLA Python API directory and use `spawn_npc.py` to add pedestrians (you don't need to add vehicles, as they are part of the scenario configuration).  Note that there are no pedestrians present in Scenario 3.
+From a third terminal window, navigate to the CARLA Python API directory and use `spawn_npc.py` to add pedestrians (you don't need to add vehicles, as they are part of the scenario configuration).  Note that there are no pedestrians present in Scenario 3 or Scenario 5.
 
 ```
 cd $CARLA_DIR/PythonAPI/examples
@@ -117,6 +118,7 @@ Hero ID: 2762
 The recordings should be saved in `~/.config/Epic/CarlaUE4/Saved/`, with the hero agent ID as the filename.  For example, using our pre-recorded scenario files you should have:
 ```
 ~/.config/Epic/CarlaUE4/Saved/2762.rec
+~/.config/Epic/CarlaUE4/Saved/3698.rec
 ~/.config/Epic/CarlaUE4/Saved/4853.rec
 ~/.config/Epic/CarlaUE4/Saved/6591.rec
 ~/.config/Epic/CarlaUE4/Saved/7856.rec
@@ -128,10 +130,11 @@ Note the mapping:
 * Scenario 2: 4853.rec
 * Scenario 3: 2762.rec
 * Scenario 4: 7856.rec
+* Scenario 5: 3698.rec
 
 If you did not record your own scenarios, make sure to copy our recordings to this directory.  They can be found in `${CARLA_DIR}/PythonAPI/examples/recorded_scenarios/`.
 
-If instead you did record your own scenarios, be sure to update lines 134-141 of `${CARLA_DIR}/PythonAPI/examples/manual_control_synchronous.py` accordingy.
+If instead you did record your own scenarios, be sure to update lines 134-143 of `${CARLA_DIR}/PythonAPI/examples/manual_control_synchronous.py` accordingly.
 
 ## 2. Replay each scenario to generate ground-truth data and images
 
