@@ -15,9 +15,11 @@ exe="/home/tamert/opencv/build/bin/example_gpu_tbd"
 
 # Paths to input files
 rgb_dir="${root_dir}/carla_results/$scenario/rgb/"
+pedestrian_bbox="${root_dir}/detector_results/$scenario/pedestrian_bboxes_${scenario}_detector.txt"
 vehicle_bbox="${root_dir}/detector_results/$scenario/vehicle_bboxes_${scenario}_detector.txt"
 
-# Tracking output log file name
+# Tracking output log file names
+pedestrian_out="pedestrian_tracking_${scenario}_detector.txt"
 vehicle_out="vehicle_tracking_${scenario}_detector.txt"
 
 # Run everything
@@ -44,8 +46,10 @@ for i in "${!distArray[@]}"; do
     # Run tracking-by-detection
     $exe --folder $rgb_dir \
          --history_distribution $dist \
+         --pedestrian_bbox_filename $pedestrian_bbox \
          --vehicle_bbox_filename $vehicle_bbox \
          --write_tracking true \
+         --pedestrian_tracking_filepath "$outdir/${pedestrian_out}" \
          --vehicle_tracking_filepath "$outdir/${vehicle_out}" \
          --write_video false \
          --num_tracking_iters $iters \

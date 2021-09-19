@@ -7,7 +7,7 @@ Other relevant repositories:
 
 * [CARLA fork](https://github.com/tkortz/carla/tree/acc-vs-hist-journal)
 * [CARLA scenario runner fork](https://github.com/tkortz/carla_scenario_runner/tree/acc-vs-hist-journal)
-* [Vehicle detector for CARLA images](https://github.com/s-nandi/carla-car-detection)
+* [Vehicle detector for CARLA images](https://github.com/tkortz/carla-car-detection/tree/acc-vs-hist-journal)
 * [Tracking-by-Detection OpenCV Sample](https://github.com/tkortz/opencv/tree/acc-vs-hist)
 
 Some relevant dependencies (see [CARLA build instructions](https://carla.readthedocs.io/en/latest/build_linux/) for more):
@@ -18,7 +18,7 @@ Some relevant dependencies (see [CARLA build instructions](https://carla.readthe
 * A semi-powerful NVIDIA GPU
 * A lot of disk space (30-50GB recommended)
 
-Note that the [vehicle detector repository](https://github.com/s-nandi/carla-car-detection) has additional dependencies, which include Python 3.6 and CUDA 10.0.  See that repository for more information.
+Note that the [vehicle detector repository](https://github.com/tkortz/carla-car-detection/tree/acc-vs-hist-journal) has additional dependencies, which include Python 3.6 and CUDA 10.0.  See that repository for more information.
 
 In order to reproduce the results in our paper, the following steps are necessary:
 1. Record the scenarios, or use our `.rec` files.
@@ -206,24 +206,20 @@ This step will result in one new ground-truth detection file per target type and
 
 ## 4. (Optional) Detect vehicles/pedestrians in images
 
-The RGB images in `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb/` can be used to perform vehicle detection.  Here is our description from the original paper:
+The RGB images in `${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb/` can be used to perform vehicle and pedestrian detection.  Here is our description from the original paper:
 
-_We chose for a detector a state-of-the-art deep-learning model, Faster R-CNN [39], which has been shown to achieve a high level of accuracy.  We used TensorFlow [1] to train a Faster R-CNN model with the Inception v2 feature extractor [24] (that was pre-trained on the COCO dataset [22], [30]) on a small dataset of 2000 images of bicycles, motorbikes, and cars generated from CARLA [8]._
+_We chose for a detector a state-of-the-art deep-learning model, Faster R-CNN [44], which has been shown to achieve a high level of accuracy. We used TensorFlow [1] to train a Faster R-CNN model with the Inception v2 feature extractor [26] (that was pre-trained on the COCO dataset [24], [34]) on a small dataset of 1300 images of bicycles, motorbikes, cars, and pedestrians generated from CARLA [10], [50]._
 
-Our trained detector is available in our [Vehicle detector for CARLA images](https://github.com/s-nandi/carla-car-detection) repository.  Make sure to set up [Git Large File Storage](https://git-lfs.github.com/) before cloning the repository.
+Our trained detector is available in our [Vehicle detector for CARLA images](https://github.com/tkortz/carla-car-detection/tree/acc-vs-hist-journal) repository (in the `acc-vs-hist-journal` branch).  Make sure to set up [Git Large File Storage](https://git-lfs.github.com/) before cloning the repository.
 
-After cloning, navigate to `$DETECTOR_DIR`, and run `image_detection.py` to perform vehicle detection on a directory of RGB images.  Note that we used the 40k-iteration detector (`detectors-40264`) and a minimum threshold of `0.70` for our evaluation.
+After cloning, navigate to `$DETECTOR_DIR`, and modify line 8 `run_detector.sh` to point to `$ISORC_DIR`.  Then, execute `run_detector.sh` to perform vehicle and pedestrian detection on the folders of RGB images corresponding to each of the five scenarios.  Note that we used the 42k-iteration detector (`detectors-42082`) and a minimum threshold of `0.70` for our evaluation.
 
 ```
 cd $DETECTOR_DIR
-python3 image_detection.py --model_path=full_trained_model/detectors-40264 --images_path=${ISORC_DIR}/carla_results/${SCENARIO_NAME}/rgb --min_threshold=0.70 --output_path=${ISORC_DIR}/detector_results/${SCENARIO_NAME}
+./run_detector.sh 42082
 ```
 
-This program will output the detections to the file `${ISORC_DIR}/detector_results/${SCENARIO_NAME}/rgb_log.txt`.  You should update its name before moving on:
-
-```
-mv ${ISORC_DIR}/detector_results/${SCENARIO_NAME}/rgb_log.txt ${ISORC_DIR}/detector_results/${SCENARIO_NAME}/vehicle_bboxes_${SCENARIO_NAME}_detector.txt
-```
+This script will output the detections to the files `${ISORC_DIR}/detector_results/${SCENARIO_NAME}/vehicle_bboxes_${SCENARIO_NAME}_detector.txt` and `${ISORC_DIR}/detector_results/${SCENARIO_NAME}/pedestrian_bboxes_${SCENARIO_NAME}_detector.txt`.
 
 ## 5. Use TBD to track vehicles/pedestrians
 
@@ -235,24 +231,24 @@ Then, once the TBD sample is built, you can configure the scripts `run_tbd_groun
 
 Finally, run the scripts.  They take the `$SCENARIO_NAME` from the earlier steps as the only input parameter.
 
-For example, to track based on ground-truth vehicle/pedestrian positions:
+For example, to track based on _ground-truth_ vehicle/pedestrian positions:
 
 ```
 cd $ISORC_DIR
 ./run_tbd_groundtruth.sh scenario_1
 ```
 
-To instead track based on detected vehicle positions (note that this will not track pedestrians):
+To instead track based on _detected_ vehicle/pedestrian positions:
 
 ```
 cd $ISORC_DIR
 ./run_tbd_detector.sh scenario_1
 ```
 
-By default, these scripts will perform tracking of vehicles (and pedestrians, if using ground-truth data) for a given scenario once for each single-valued PMF in our paper, and 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and line 25 of `run_tbd_detector.sh`.  The file names have the following format:
+By default, these scripts will perform tracking of vehicles and pedestrians for a given scenario once for each single-valued PMF in our paper, and 100 times for each PMF in our paper.  The resulting log files will be placed in `${ISORC_DIR}/tracking_results/${SCENARIO_NAME}/${PMF}/`, where `$PMF` is one of the eight names listed on line 27 of `run_tbd_groundtruth.sh` and line 25 of `run_tbd_detector.sh`.  The file names have the following format:
 
 * `${TARGET}_tracking_${SCENARIO_NAME}_vis.txt` if using ground-truth data (where `$TARGET` is one of "pedestrian" or "vehicle")
-* `vehicle_tracking_${SCENARIO_NAME}_detector.txt` if using detected positions (no pedestrian detection is currently performed)
+* `${TARGET}_tracking_${SCENARIO_NAME}_detector.txt` if using detected positions
 
 These log files will be processed in the last step, next.
 
@@ -260,7 +256,7 @@ These log files will be processed in the last step, next.
 
 ### a) Metrics using ground-truth positions
 
-To generate the metrics, as displayed in Tables II and III of our paper for ground-truth positions, use the `run_parse_metrics_groundtruth.sh` script:
+To generate the metrics, as displayed in Tables III and IV of our paper for ground-truth positions, use the `run_parse_metrics_groundtruth.sh` script:
 
 ```
 cd $ISORC_DIR
@@ -271,11 +267,11 @@ The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARI
 
 ### b) Metrics using detected positions
 
-The results from Table IV for deep-learning-based vehicle detections can be computed using the `run_parse_metrics_detector.sh` script:
+The results from Tables V and VI for deep-learning-based vehicle and pedestrian detections can be computed using the `run_parse_metrics_detector.sh` script:
 
 ```
 cd $ISORC_DIR
 ./run_parse_metrics_detector.sh
 ```
 
-The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/vehicle_metrics_detector.txt`.
+The resulting metrics will be located in `${ISORC_DIR}/metrics_results/${SCENARIO_NAME}/${TARGET}_metrics_detector.txt`.
